@@ -5,6 +5,7 @@ import {
   Switch,
   Box,
   IconButton,
+  Button,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { styled } from "@mui/material/styles";
@@ -23,19 +24,25 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AppsIcon from "@mui/icons-material/Apps";
 import AirIcon from "@mui/icons-material/Air";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { tempType } from "../../../reducers/tempTypeReducer";
 
 const Sidebar = () => {
-  const { current, currentLocation } = useSelector((state) => state);
-  const whichMode = useSelector((state) => state.customization.bool);
+  const { current, currentLocation, customization, tempTypeMode } = useSelector(
+    (state) => state,
+  );
   const dispatch = useDispatch();
 
   const eventHandler = () => {
-    dispatch(themeMode(!whichMode));
+    dispatch(themeMode(!customization.bool));
+  };
+
+  const tempEventHandler = () => {
+    dispatch(tempType(!tempTypeMode.bool));
   };
 
   const { number } = useSpring({
     from: { number: 0 },
-    number: current.temp ? Math.round(current.temp - 273.15) : 0,
+    number: current.temp ? current.temp : 0,
     delay: 900,
     config: config.molasses,
   });
@@ -54,7 +61,7 @@ const Sidebar = () => {
       sx={{
         display: "grid",
         width: "100%",
-        height: { md: "inherit", sm: "80vh", xs: "80vh" },
+        height: { md: "inherit", sm: "100vh", xs: "100vh" },
         p: { md: 2, sm: 2, xs: 1 },
         background: "linear-gradient(330deg, #11998e 0%, #38ef7d 100%)",
       }}
@@ -62,19 +69,36 @@ const Sidebar = () => {
       <Grid className="tools_bar">
         <Stack direction="row" className="tools_bar_stack">
           <CitySelect />
-          <Box display="flex" alignItems="center" onClick={eventHandler}>
-            {whichMode ? (
-              <Lottie
-                options={{ ...defaultOptions, animationData: sun }}
-                height="60px"
-                width="60px"
-              />
+          <Box display="flex" alignItems="center" onClick={tempEventHandler}>
+            {tempTypeMode.bool ? (
+              <IconButton disableRipple>°C</IconButton>
             ) : (
-              <Lottie
-                options={{ ...defaultOptions, animationData: moon }}
-                height="60px"
-                width="60px"
-              />
+              <IconButton disableRipple>°F</IconButton>
+            )}
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            onClick={eventHandler}
+            sx={{ height: "40px", width: "60px", overflow: "hidden" }}
+          >
+            {customization.bool ? (
+              <IconButton disableRipple>
+                <Lottie
+                  options={{ ...defaultOptions, animationData: sun }}
+                  height="70px"
+                  width="70px"
+                />
+              </IconButton>
+            ) : (
+              <IconButton disableRipple sx={{ mt: "4px" }}>
+                <Lottie
+                  options={{ ...defaultOptions, animationData: moon }}
+                  height="70px"
+                  width="70px"
+                />
+              </IconButton>
             )}
           </Box>
 

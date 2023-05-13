@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   CssBaseline,
@@ -9,6 +9,8 @@ import themes from "./themes";
 import Routes from "./routes";
 import { Flipper } from "react-flip-toolkit";
 import WithRouter from "./WithRouter";
+import { useEffect } from "react";
+import { getCurrentdata, getHourlydata } from "./reducers/weatherReducer";
 
 const Nimadir = WithRouter(({ router }) => (
   <Flipper spring="veryGentle" flipKey={router.location.pathname}>
@@ -17,7 +19,13 @@ const Nimadir = WithRouter(({ router }) => (
 ));
 
 function App() {
-  const customization = useSelector((state) => state.customization);
+  const dispatch = useDispatch();
+  const { customization, tempTypeMode } = useSelector((state) => state);
+
+  useEffect(() => {
+    dispatch(getHourlydata());
+    dispatch(getCurrentdata());
+  }, [tempTypeMode]);
 
   return (
     <StyledEngineProvider injectFirst>

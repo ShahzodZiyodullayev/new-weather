@@ -1,4 +1,5 @@
 import Grid from "@mui/material/Unstable_Grid2";
+import HourlyChart from "../../../components/HourlyChart";
 
 const Rightbar = ({ children }) => {
   return (
@@ -15,6 +16,7 @@ const Rightbar = ({ children }) => {
         p: { md: 2, sm: 2, xs: 1 },
       }}
     >
+      <HourlyChart />
       {children}
     </Grid>
   );

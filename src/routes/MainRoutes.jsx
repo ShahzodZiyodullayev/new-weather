@@ -10,14 +10,14 @@ const Daily = Loadable(lazy(() => import("../pages/Daily")));
 const Profile = Loadable(lazy(() => import("../pages/Profile")));
 
 const MainRoutes = [
-  // {
-  //   path: "/profile",
-  //   element: <Profile />,
-  // },
-  // {
-  //   path: "/p",
-  //   element: <Nimadir />,
-  // },
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
+  {
+    path: "/p",
+    element: <Nimadir />,
+  },
   {
     element: <MainLayout />,
     children: [
