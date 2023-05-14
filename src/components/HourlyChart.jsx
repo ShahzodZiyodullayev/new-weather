@@ -1,93 +1,94 @@
-import { Grid, Typography } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { Grid } from "@mui/material";
+import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import Draggable from "react-draggable";
-
 import { useSelector } from "react-redux";
+
+const hourlyChartOptions = {
+  chart: {
+    type: "candlestick",
+    height: 350,
+    toolbar: { show: false },
+    zoom: { enabled: false },
+    offsetX: 5,
+    offsetY: -10,
+    animations: {
+      enabled: true,
+      easing: "linear",
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 350,
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350,
+      },
+    },
+  },
+  markers: {
+    size: 0,
+  },
+  stroke: {
+    show: true,
+    curve: "smooth",
+    lineCap: "butt",
+    colors: ["#FFB3AA"],
+    width: 1,
+    dashArray: 0,
+  },
+  fill: {
+    colors: ["#fb7c7c"],
+    type: "gradient",
+    gradient: {
+      gradientToColors: ["#00A4FF"],
+      type: "vertical",
+      shadeIntensity: 0,
+      opacityFrom: 0.7,
+      opacityTo: 0,
+    },
+  },
+  legend: {
+    show: false,
+  },
+  tooltip: {
+    enabled: false,
+  },
+  yaxis: {
+    labels: { show: false },
+  },
+  grid: {
+    show: false,
+  },
+};
 
 function HourlyChart() {
   const { hourly, customization } = useSelector((state) => state);
   const [series, setSeries] = useState([{}]);
-
-  const hourlyChartOptions = {
-    chart: {
-      type: "candlestick",
-      height: 350,
-      toolbar: { show: false },
-      zoom: { enabled: false },
-      offsetX: 5,
-      offsetY: -10,
-      animations: {
-        enabled: true,
-        easing: "linear",
-        speed: 800,
-        animateGradually: {
-          enabled: true,
-          delay: 350,
-        },
-        dynamicAnimation: {
-          enabled: true,
-          speed: 350,
-        },
-      },
-    },
-    markers: {
-      size: 0,
-    },
-    stroke: {
-      show: true,
-      curve: "smooth",
-      lineCap: "butt",
-      colors: ["#FFB3AA"],
-      width: 1,
-      dashArray: 0,
-    },
-    fill: {
-      colors: ["#fb7c7c"],
-      type: "gradient",
-      gradient: {
-        gradientToColors: ["#00A4FF"],
-        type: "vertical",
-        shadeIntensity: 0,
-        opacityFrom: 0.7,
-        opacityTo: 0,
-      },
-    },
-    legend: {
-      show: false,
-    },
-    tooltip: {
-      enabled: false,
-    },
-    yaxis: {
-      labels: { show: false },
-    },
-    grid: {
-      show: false,
-    },
-  };
+  const chartRef = useRef();
+  const [fromLeft, setFromLeft] = useState();
 
   const [options, setOptions] = useState(hourlyChartOptions);
+
+  useEffect(() => {
+    setFromLeft(chartRef.current.getBoundingClientRect().width);
+  }, []);
 
   useEffect(() => {
     setSeries([
       {
         name: "Baland",
-        data: hourly ? hourly.filter((e, i) => i < 24).map((e) => e.temp) : [],
+        data: hourly ? hourly.filter((_, i) => i < 24).map((e) => e.temp) : [],
       },
     ]);
   }, [hourly]);
-
-  // useEffect(() => {
-  //   console.log(options.dataLabels.style);
-  //   hourlyChartOptions();
-  // }, [customization.bool]);
 
   useEffect(() => {
     setOptions((prev) => ({
       ...prev,
       colors: [customization.bool ? "#000" : "#fff"],
       dataLabels: {
+        enabled: true,
         offsetY: -4,
         formatter: (val) => val + "°",
         background: {
@@ -101,15 +102,14 @@ function HourlyChart() {
       },
       xaxis: {
         type: "category",
-        categories:
-          hourly && hourly.data
-            ? hourly.data
-                .filter((e, i) => i < 24)
-                .map((e) => {
-                  let date = new Date(e.dt * 1000);
-                  return `${date.getHours()}:00`;
-                })
-            : [],
+        categories: hourly
+          ? hourly
+              .filter((e, i) => i < 24)
+              .map((e) => {
+                let date = new Date(e.dt * 1000);
+                return `${date.getHours()}:00`;
+              })
+          : [],
         axisTicks: {
           show: false,
         },
@@ -131,10 +131,11 @@ function HourlyChart() {
 
   return (
     <Grid
+      ref={chartRef}
       sx={{
         height: "300px",
         width: "100%",
-        overflowX: "scroll",
+        // overflowX: "scroll",
         overflowY: "hidden",
         "&::-webkit-scrollbar": {
           width: 0,
@@ -144,7 +145,7 @@ function HourlyChart() {
     >
       <Draggable
         axis="x"
-        bounds={{ left: -1000, right: 0 }}
+        bounds={{ left: fromLeft - 2000, right: 0 }}
         defaultPosition={{ x: 0, y: 0 }}
       >
         <ReactApexChart

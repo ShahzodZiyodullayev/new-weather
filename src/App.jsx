@@ -10,7 +10,11 @@ import Routes from "./routes";
 import { Flipper } from "react-flip-toolkit";
 import WithRouter from "./WithRouter";
 import { useEffect } from "react";
-import { getCurrentdata, getHourlydata } from "./reducers/weatherReducer";
+import {
+  getCurrentdata,
+  getDailydata,
+  getHourlydata,
+} from "./reducers/weatherReducer";
 
 const Nimadir = WithRouter(({ router }) => (
   <Flipper spring="veryGentle" flipKey={router.location.pathname}>
@@ -25,6 +29,7 @@ function App() {
   useEffect(() => {
     dispatch(getHourlydata());
     dispatch(getCurrentdata());
+    dispatch(getDailydata());
   }, [tempTypeMode]);
 
   return (

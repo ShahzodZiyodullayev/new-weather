@@ -1,5 +1,7 @@
 import Grid from "@mui/material/Unstable_Grid2";
 import HourlyChart from "../../../components/HourlyChart";
+import Daily from "../../../pages/Daily";
+import DailySection from "../../../components/DailySection";
 
 const Rightbar = ({ children }) => {
   return (
@@ -17,6 +19,7 @@ const Rightbar = ({ children }) => {
       }}
     >
       <HourlyChart />
+      <DailySection />
       {children}
     </Grid>
   );

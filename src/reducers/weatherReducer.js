@@ -11,19 +11,12 @@ export const hourlyWeatherSlice = createSlice({
   initialState: [],
   reducers: {
     getHourlydata: (state, { _, payload }) => {
-      state = payload
-        ? [
-            ...payload.map((item) => ({
-              ...item,
-              temp: TempUnit(whichUnit(), item.temp, true),
-            })),
-          ]
-        : [
-            ...state.map((item) => ({
-              ...item,
-              temp: TempUnit(whichUnit(), item.temp),
-            })),
-          ];
+      state = [
+        ...(payload ? payload : state).map((item) => ({
+          ...item,
+          temp: TempUnit(whichUnit(), item.temp, payload ? true : null),
+        })),
+      ];
       return state;
     },
   },
@@ -34,7 +27,15 @@ export const dailyWeatherSlice = createSlice({
   initialState: [],
   reducers: {
     getDailydata: (state, { _, payload }) => {
-      state = payload;
+      state = [
+        ...(payload ? payload : state).map((item) => ({
+          ...item,
+          temp: {
+            max: TempUnit(whichUnit(), item.temp.max, payload ? true : null),
+            min: TempUnit(whichUnit(), item.temp.min, payload ? true : null),
+          },
+        })),
+      ];
       return state;
     },
   },
@@ -45,16 +46,14 @@ export const currentWeatherSlice = createSlice({
   initialState: {},
   reducers: {
     getCurrentdata: (state, { _, payload }) => {
-      console.log(payload);
-      state = payload
-        ? {
-            ...payload,
-            temp: TempUnit(whichUnit(), payload.temp, true),
-          }
-        : {
-            ...state,
-            temp: TempUnit(whichUnit(), state.temp),
-          };
+      state = {
+        ...(payload ? payload : state),
+        temp: TempUnit(
+          whichUnit(),
+          (payload ? payload : state).temp,
+          payload ? true : null,
+        ),
+      };
       return state;
     },
   },

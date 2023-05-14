@@ -1,14 +1,5 @@
-import {
-  Avatar,
-  Stack,
-  Typography,
-  Switch,
-  Box,
-  IconButton,
-  Button,
-} from "@mui/material";
+import { Avatar, Stack, Typography, Box, IconButton } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { styled } from "@mui/material/styles";
 import CitySelect from "./CitySelect/CitySelect";
 import { useSpring, animated, config } from "react-spring";
 import "./styles.css";
@@ -19,12 +10,8 @@ import { themeMode } from "../../../reducers/customization";
 import sun from "../../../assets/sun.json";
 import moon from "../../../assets/moon.json";
 import Lottie from "react-lottie";
-import Hailstone from "../../../assets/clouds.gif";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import AppsIcon from "@mui/icons-material/Apps";
-import AirIcon from "@mui/icons-material/Air";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { tempType } from "../../../reducers/tempTypeReducer";
+import IconSelector from "../../../helper/IconSelector";
 
 const Sidebar = () => {
   const { current, currentLocation, customization, tempTypeMode } = useSelector(
@@ -138,16 +125,14 @@ const Sidebar = () => {
             </Typography>
           )}
           <Typography className="temperature_description" variant="body">
-            {current && current.weather && current.weather[0].description}
+            {current && current?.weather && current?.weather[0]?.description}
           </Typography>
         </Box>
         <Box>
-          <img
-            style={{ background: "transparent" }}
-            height="150px"
-            width="150px"
-            src={Hailstone}
-            alt=""
+          <IconSelector
+            id={current?.weather && current.weather[0].id}
+            size={10}
+            alt={current?.weather && current.weather[0].main}
           />
         </Box>
       </Grid>
