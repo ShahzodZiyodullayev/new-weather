@@ -62,7 +62,8 @@ const Sidebar = () => {
         p: { md: 2, sm: 2, xs: 1 },
         background: {
           md: "linear-gradient(330deg, #11998e 0%, #38ef7d 100%)",
-          xs: "linear-gradient(to bottom, #FF4858 10%, transparent 100%)",
+          xs: "none",
+          // xs: "linear-gradient(to bottom, #FF4858 10%, transparent 100%)",
         },
       }}
     >
@@ -106,7 +107,7 @@ const Sidebar = () => {
             )}
           </Box>
 
-          <Link to="profile">
+          {/* <Link to="profile">
             <Flipped flipId={"one"}>
               <Avatar
                 src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
@@ -114,7 +115,7 @@ const Sidebar = () => {
                 sx={{ borderRadius: "10px", cursor: "pointer" }}
               />
             </Flipped>
-          </Link>
+          </Link> */}
         </Stack>
       </Grid>
 
@@ -130,22 +131,39 @@ const Sidebar = () => {
             width: "100%",
             alignItems: isSm ? "center" : "flex-start",
             justifyContent: "space-between",
+            pt: { md: 0, xs: 5 },
           }}
         >
           <Typography
             className="temperature_value"
             variant="body1"
             sx={{
-              fontSize: { xs: "80px", md: "170px" },
-              lineHeight: { xs: "80px", md: "170px" },
+              fontSize: { xs: "100px", md: "170px" },
+              lineHeight: { xs: "100px", md: "170px" },
+              mb: -2,
             }}
           >
             {current && current?.temp && (
               <animated.div>{number.to((n) => n.toFixed())}</animated.div>
             )}
-            <span className="temperature_round">°</span>
+            °
           </Typography>
-          <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-end",
+              flexDirection: "column",
+            }}
+          >
+            {isSm && (
+              <Box>
+                <IconSelector
+                  id={current?.weather && current?.weather[0].id}
+                  width={50}
+                  alt={current?.weather && current?.weather[0].main}
+                />
+              </Box>
+            )}
             {currentLocation && (
               <Typography
                 className="current_location_name"
@@ -160,15 +178,6 @@ const Sidebar = () => {
               {current && current?.weather && current?.weather[0]?.description}
             </Typography>
           </div>
-          {isSm && (
-            <Box>
-              <IconSelector
-                id={current?.weather && current.weather[0].id}
-                size={10}
-                alt={current?.weather && current.weather[0].main}
-              />
-            </Box>
-          )}
         </Stack>
       </Grid>
     </Grid>

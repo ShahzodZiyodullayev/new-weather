@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { DebounceInput } from "react-debounce-input";
 import {
   Box,
@@ -13,7 +13,7 @@ import { UilSearch } from "@iconscout/react-unicons";
 import "./style.css";
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { useSpring, animated, config } from "react-spring";
+import { useSpring, config } from "react-spring";
 import {
   getLocationsdata,
   getCurrentdata,
@@ -23,6 +23,7 @@ import {
 } from "../../../../reducers/weatherReducer";
 import locationService from "../../../../service/location";
 import weatherService from "../../../../service/weather";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
 const api = {
   // key: "b60784f97169c5d1da965fb3dcf63b17",
@@ -161,7 +162,7 @@ export default function CitySelect(props) {
   });
 
   return (
-    <Grid className="cont">
+    <Box className="cont">
       <Box
         onClick={() => {
           setVisible(false);
@@ -205,39 +206,41 @@ export default function CitySelect(props) {
               : "visible"
           }`}
         >
-          <List className="list">
-            {!loading ? (
-              <>
-                {locations ? (
-                  locations.length > 0 ? (
-                    locations.map((item, i) => (
-                      <ListItemButton key={i} sx={{ height: "35px" }}>
-                        <ListItemText onClick={() => click(item)}>
-                          <Typography noWrap>{item.label}</Typography>
-                        </ListItemText>
-                      </ListItemButton>
-                    ))
-                  ) : (
-                    <Grid className="noResult">No results</Grid>
-                  )
-                ) : (
-                  <>
-                    {citiesNotFound ? (
-                      <Grid className="noResult">Data not Found</Grid>
+          <Grid2 sx={{ borderRadius: "12px" }}>
+            <List className="list">
+              {!loading ? (
+                <>
+                  {locations ? (
+                    locations.length > 0 ? (
+                      locations.map((item, i) => (
+                        <ListItemButton key={i} sx={{ height: "35px" }}>
+                          <ListItemText onClick={() => click(item)}>
+                            <Typography noWrap>{item.label}</Typography>
+                          </ListItemText>
+                        </ListItemButton>
+                      ))
                     ) : (
-                      <Grid className="noResult">{inError}</Grid>
-                    )}
-                  </>
-                )}
-              </>
-            ) : (
-              <Grid className="noResult">
-                <CircularProgress />
-              </Grid>
-            )}
-          </List>
+                      <Grid className="noResult">No results</Grid>
+                    )
+                  ) : (
+                    <>
+                      {citiesNotFound ? (
+                        <Grid className="noResult">Data not Found</Grid>
+                      ) : (
+                        <Grid className="noResult">{inError}</Grid>
+                      )}
+                    </>
+                  )}
+                </>
+              ) : (
+                <Grid className="noResult">
+                  <CircularProgress />
+                </Grid>
+              )}
+            </List>
+          </Grid2>
         </Box>
       </Box>
-    </Grid>
+    </Box>
   );
 }
