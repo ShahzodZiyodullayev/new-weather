@@ -49,19 +49,19 @@
 } */
 .temperature_value {
   display: flex;
-  font-size: 170px;
-  line-height: 170px;
-  color: white;
+  /* font-size: 170px;
+  line-height: 170px; */
+  /* color: white; */
   /* font-family: "Comfortaa", cursive; */
 }
 .current_location_name {
-  color: white;
+  /* color: white; */
   /* font-family: "Comfortaa", cursive; */
   font-size: 25px;
   line-height: 25px;
 }
 .temperature_description {
-  color: white;
+  /* color: white; */
   /* font-family: "Comfortaa", cursive; */
   font-size: 15px;
   line-height: 12px;
@@ -77,7 +77,7 @@
 }
 .weather-property_value {
   /* font-family: "Comfortaa", cursive; */
-  color: white;
+  /* color: white; */
 }
 .max_height {
   height: 100%;

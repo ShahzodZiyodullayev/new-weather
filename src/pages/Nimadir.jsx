@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Dialog, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useSelector } from "react-redux";
 import moment from "moment";
@@ -10,6 +10,16 @@ const Daily = () => {
   const { daily, customization } = useSelector((state) => state);
   const [focused, setFocused] = useState(null);
   const [selected, setSelected] = useState(daily[0]);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const onClicks = (index) =>
     setFocused((prev) => (prev === index ? null : index));
 
@@ -33,7 +43,7 @@ const Daily = () => {
                 lineHeight: "50px",
               }}
             >
-              {Math.round(value?.temp?.day - 273.15)}°
+              {value?.temp?.max}°
             </Typography>
           </Flipped>
           <Typography variant="h3" textTransform="uppercase">
@@ -60,7 +70,7 @@ const Daily = () => {
           color="inherit"
           sx={{ transition: "0ms" }}
         >
-          {Math.round(value?.temp?.day - 273.15)}°
+          {value?.temp?.max}°
         </Typography>
       </Flipped>
     );
@@ -115,6 +125,7 @@ const Daily = () => {
                 onClick={() => {
                   setSelected(e);
                   onClicks(i);
+                  handleClickOpen();
                 }}
               >
                 <Typography

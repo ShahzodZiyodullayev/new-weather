@@ -1,4 +1,12 @@
-import { Avatar, Stack, Typography, Box, IconButton } from "@mui/material";
+import {
+  Avatar,
+  Stack,
+  Typography,
+  Box,
+  IconButton,
+  useMediaQuery,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import CitySelect from "./CitySelect/CitySelect";
 import { useSpring, animated, config } from "react-spring";
@@ -17,6 +25,8 @@ const Sidebar = () => {
   const { current, currentLocation, customization, tempTypeMode } = useSelector(
     (state) => state,
   );
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down("md"));
   const dispatch = useDispatch();
 
   const eventHandler = () => {
@@ -43,14 +53,17 @@ const Sidebar = () => {
     <Grid
       xs={12}
       sm={12}
-      md={5}
-      lg={4.5}
+      md={4}
+      lg={4}
       sx={{
         display: "grid",
         width: "100%",
-        height: { md: "inherit", sm: "100vh", xs: "100vh" },
+        height: { md: "inherit", sm: "auto", xs: "auto" },
         p: { md: 2, sm: 2, xs: 1 },
-        background: "linear-gradient(330deg, #11998e 0%, #38ef7d 100%)",
+        background: {
+          md: "linear-gradient(330deg, #11998e 0%, #38ef7d 100%)",
+          xs: "linear-gradient(to bottom, #FF4858 10%, transparent 100%)",
+        },
       }}
     >
       <Grid className="tools_bar">
@@ -58,9 +71,13 @@ const Sidebar = () => {
           <CitySelect />
           <Box display="flex" alignItems="center" onClick={tempEventHandler}>
             {tempTypeMode.bool ? (
-              <IconButton disableRipple>°C</IconButton>
+              <IconButton disableRipple>
+                <Typography variant="h3">°C</Typography>
+              </IconButton>
             ) : (
-              <IconButton disableRipple>°F</IconButton>
+              <IconButton disableRipple>
+                <Typography variant="h3">°F</Typography>
+              </IconButton>
             )}
           </Box>
           <Box
@@ -107,34 +124,52 @@ const Sidebar = () => {
         alignItems="flex-end"
         justifyContent="space-between"
       >
-        <Box>
-          <Typography className="temperature_value" variant="body">
-            {current && current.temp && (
+        <Stack
+          direction={isSm ? "row" : "column"}
+          sx={{
+            width: "100%",
+            alignItems: isSm ? "center" : "flex-start",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography
+            className="temperature_value"
+            variant="body1"
+            sx={{
+              fontSize: { xs: "80px", md: "170px" },
+              lineHeight: { xs: "80px", md: "170px" },
+            }}
+          >
+            {current && current?.temp && (
               <animated.div>{number.to((n) => n.toFixed())}</animated.div>
             )}
             <span className="temperature_round">°</span>
           </Typography>
-          {currentLocation && (
-            <Typography
-              className="current_location_name"
-              display="block"
-              noWrap
-              variant="body"
-            >
-              {currentLocation.loc.split(",")[0]}
+          <div>
+            {currentLocation && (
+              <Typography
+                className="current_location_name"
+                display="block"
+                noWrap
+                variant="body1"
+              >
+                {currentLocation.loc.split(",")[0]}
+              </Typography>
+            )}
+            <Typography className="temperature_description" variant="body1">
+              {current && current?.weather && current?.weather[0]?.description}
             </Typography>
+          </div>
+          {isSm && (
+            <Box>
+              <IconSelector
+                id={current?.weather && current.weather[0].id}
+                size={10}
+                alt={current?.weather && current.weather[0].main}
+              />
+            </Box>
           )}
-          <Typography className="temperature_description" variant="body">
-            {current && current?.weather && current?.weather[0]?.description}
-          </Typography>
-        </Box>
-        <Box>
-          <IconSelector
-            id={current?.weather && current.weather[0].id}
-            size={10}
-            alt={current?.weather && current.weather[0].main}
-          />
-        </Box>
+        </Stack>
       </Grid>
     </Grid>
   );

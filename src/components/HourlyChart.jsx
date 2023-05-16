@@ -135,12 +135,14 @@ function HourlyChart() {
       sx={{
         height: "300px",
         width: "100%",
-        // overflowX: "scroll",
         overflowY: "hidden",
         "&::-webkit-scrollbar": {
           width: 0,
         },
         cursor: "pointer",
+        background: "rgba(200, 200, 200, 0.1)",
+        borderRadius: "20px",
+        mb: 1,
       }}
     >
       <Draggable
