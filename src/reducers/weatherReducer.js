@@ -27,7 +27,6 @@ export const dailyWeatherSlice = createSlice({
   initialState: [],
   reducers: {
     getDailydata: (state, { _, payload }) => {
-      console.log(payload);
       state = [
         ...(payload ? payload : state).map((item) => ({
           ...item,

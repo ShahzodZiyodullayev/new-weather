@@ -3,6 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactApexChart from "react-apexcharts";
 import Draggable from "react-draggable";
 import { useSelector } from "react-redux";
+import { colorSequence } from "../helper/chartColor";
+import IconSelector from "../helper/IconSelector";
+import fff from "../assets/bolt.png";
 
 const hourlyChartOptions = {
   chart: {
@@ -26,27 +29,28 @@ const hourlyChartOptions = {
       },
     },
   },
-  markers: {
-    size: 0,
-  },
   stroke: {
     show: true,
     curve: "smooth",
     lineCap: "butt",
-    colors: ["#FFB3AA"],
-    width: 1,
+    // colors: colorSequence,
+    colors: ["#FFE45C"],
+    width: 3,
     dashArray: 0,
   },
   fill: {
-    colors: ["#fb7c7c"],
-    type: "gradient",
-    gradient: {
-      gradientToColors: ["#00A4FF"],
-      type: "vertical",
-      shadeIntensity: 0,
-      opacityFrom: 0.7,
-      opacityTo: 0,
-    },
+    opacity: 0,
+    type: "solid",
+    colors: ["#fff"],
+    // colors: ["#fb7c7c"],
+    // type: "gradient",
+    // gradient: {
+    //   gradientToColors: ["#00A4FF"],
+    //   type: "vertical",
+    //   shadeIntensity: 0,
+    //   opacityFrom: 0.7,
+    //   opacityTo: 0,
+    // },
   },
   legend: {
     show: false,
@@ -87,9 +91,18 @@ function HourlyChart() {
     setOptions((prev) => ({
       ...prev,
       colors: [customization.bool ? "#000" : "#fff"],
+
+      markers: {
+        show: true,
+        size: 5,
+        shape: "circle",
+        strokeColors: ["#FFE45C"],
+        strokeWidth: 2,
+        colors: customization.bool ? "#F9F9F9" : "#151D2A",
+      },
       dataLabels: {
         enabled: true,
-        offsetY: -4,
+        offsetY: "100%",
         formatter: (val) => val + "°",
         background: {
           enabled: false,
@@ -126,6 +139,21 @@ function HourlyChart() {
           show: false,
         },
       },
+      // annotations: {
+      //   points: hourly
+      //     .filter((_, i) => i < 24)
+      //     .map((data, i) => ({
+      //       x: `${new Date(data.dt * 1000).getHours()}:00`,
+      //       y: "0px",
+      //       image: {
+      //         path: `http://openweathermap.org/img/wn/${data?.weather[0]?.icon}@2x.png`,
+      //         width: 40,
+      //         height: 40,
+      //         // offsetX: 0,
+      //         // offsetY: 0,
+      //       },
+      //     })),
+      // },
     }));
   }, [hourly, customization.bool]);
 
@@ -133,7 +161,7 @@ function HourlyChart() {
     <Grid
       ref={chartRef}
       sx={{
-        height: "300px",
+        height: "200px",
         width: "100%",
         overflowY: "hidden",
         "&::-webkit-scrollbar": {
